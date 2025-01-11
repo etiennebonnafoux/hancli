@@ -1,5 +1,8 @@
 import httpx
 
+from models import Item,TypeItem
+from datetime import datetime
+
 
 class HackerNewsAPI:
     def __init__(self):
@@ -21,7 +24,23 @@ class HackerNewsAPI:
     def get_item(self, id: int):
         with httpx.Client() as client:
             response = client.get(f"{self.base_url}/v0/item/{id}.json")
-            return response.json()
+            data : dict = response.json()
+
+            return Item(id=data["id"],
+                        deleted=data.get("delected",False),
+                        type_item=TypeItem.Story,
+                        by=data.get("by",None),
+                        time=datetime.fromtimestamp(data["time"]),
+                        text=data.get("text",""),
+                        dead=data.get("dead",False),
+                        parent=data.get("parent",None),
+                        poll=data.get("poll",None),
+                        kids=data.get("kids",None),
+                        url=data.get("url",None),
+                        score=data.get("score",None),
+                        title=data.get("title",None),
+                        parts=data.get("parts",None),
+                        descendants=data.get("descendants",None))
 
 
 if __name__ == "__main__":
