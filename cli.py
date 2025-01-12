@@ -9,6 +9,9 @@ hn_API = HackerNewsAPI()
 
 @app.command()
 def top(limit: int = 10):
+    """
+    Give the top stories of Hacker News
+    """
     ids = hn_API.get_top(limit)
     with console.status("Working..."):
         console.rule()
