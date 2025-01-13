@@ -1,6 +1,6 @@
 import httpx
 
-from models import Item,TypeItem
+from models import Item,ItemType,StoryType
 from datetime import datetime
 
 
@@ -8,17 +8,20 @@ class HackerNewsAPI:
     def __init__(self):
         self.base_url = "https://hacker-news.firebaseio.com"
 
-    def get_top(self, limit: int = 10) -> list[int]:
-        """Load the ids of the top stories
+
+    def get_stories(self,story_type: StoryType, limit =10 ) -> list[int]:
+        """
+        Load the ids of the stories
 
         Args:
-            limit (int, optional): The number of wanted stories. Defaults to 10.
+            limit (int, optional): The number of the stories. Default to 10
+            story_type (StoryType): the type of story to get
 
         Returns:
-            list[int]: _description_
+            list[int]: the ids of the ask
         """
         with httpx.Client() as client:
-            response = client.get(f"{self.base_url}/v0/topstories.json")
+            response = client.get(f"{self.base_url}/v0/{story_type.value}.json")
             return response.json()[:limit]
 
     def get_item(self, id: int):
@@ -28,7 +31,7 @@ class HackerNewsAPI:
 
             return Item(id=data["id"],
                         deleted=data.get("delected",False),
-                        type_item=TypeItem.Story,
+                        type_item=ItemType.Story,
                         by=data.get("by",None),
                         time=datetime.fromtimestamp(data["time"]),
                         text=data.get("text",""),
@@ -45,4 +48,4 @@ class HackerNewsAPI:
 
 if __name__ == "__main__":
     hn_client = HackerNewsAPI()
-    print(hn_client.get_top())
+    print(hn_client.get_stories())

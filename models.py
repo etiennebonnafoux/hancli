@@ -2,8 +2,15 @@ from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 
+class StoryType(Enum):
+    Top = "topstories"
+    New = "newsories"
+    Ask = "askstories"
+    Show = "showstories"
+    Job = "jobstories"
+    Best = "beststories"
 
-class TypeItem(Enum):
+class ItemType(Enum):
     Job = 1
     Story = 2
     Comment = 3
